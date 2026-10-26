@@ -56,7 +56,19 @@ export const DashboardPage = () => {
       ]);
 
       if (leaveBalRes.status === 'fulfilled' && leaveBalRes.value.data?.success) {
-        setLeaveBalance(leaveBalRes.value.data.data);
+        const balData = leaveBalRes.value.data.data;
+        const balances = balData?.balances || balData;
+        const casualAvail = balances?.CASUAL?.available ?? balances?.CASUAL?.remaining ?? 0;
+        const sickAvail = balances?.SICK?.available ?? balances?.SICK?.remaining ?? 0;
+        const earnedAvail = balances?.EARNED?.available ?? balances?.EARNED?.remaining ?? 0;
+        setLeaveBalance({
+          ...balData,
+          balances,
+          casualAvail,
+          sickAvail,
+          earnedAvail,
+          totalRemaining: casualAvail + sickAvail + earnedAvail,
+        });
       }
 
       if (attMeRes.status === 'fulfilled' && attMeRes.value.data?.success) {
@@ -229,7 +241,7 @@ export const DashboardPage = () => {
           iconBg="bg-emerald-50"
           subtext={
             leaveBalance
-              ? `Casual: ${leaveBalance.CASUAL?.remaining}d | Sick: ${leaveBalance.SICK?.remaining}d`
+              ? `Casual: ${leaveBalance.casualAvail}d | Sick: ${leaveBalance.sickAvail}d`
               : 'Yearly balance'
           }
         />

@@ -23,7 +23,7 @@ import Modal from '../../components/common/Modal';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 
 export default function ProfilePage() {
-  const { user, login } = useAuth();
+  const { user, updateCurrentUser } = useAuth();
   const { showSuccess, showError } = useToast();
 
   const [profile, setProfile] = useState(null);
@@ -56,7 +56,8 @@ export default function ProfilePage() {
       }
 
       if (balanceRes.status === 'fulfilled' && balanceRes.value.data.success) {
-        setBalances(balanceRes.value.data.data);
+        const balObj = balanceRes.value.data.data?.balances || balanceRes.value.data.data;
+        setBalances(balObj);
       }
     } catch (err) {
       showError('Failed to load profile details.');
@@ -83,11 +84,7 @@ export default function ProfilePage() {
         showSuccess('Profile updated successfully!');
         setProfile(res.data.data);
         setShowEditModal(false);
-        // Refresh local storage / AuthContext user object if available
-        const token = localStorage.getItem('staffsync_token');
-        if (token && res.data.data) {
-          login(res.data.data, token);
-        }
+        updateCurrentUser(res.data.data);
       }
     } catch (err) {
       showError(err.response?.data?.message || 'Failed to update profile.');
@@ -246,27 +243,27 @@ export default function ProfilePage() {
                 <div className="flex items-center justify-between p-2.5 bg-blue-50/60 rounded-lg border border-blue-100">
                   <span className="text-xs font-medium text-blue-900">Casual Leave</span>
                   <span className="text-sm font-bold text-blue-700">
-                    {balances.casual?.remaining ?? 0}{' '}
+                    {balances.CASUAL?.available ?? balances.casual?.remaining ?? 0}{' '}
                     <span className="text-xs font-normal text-blue-500">
-                      / {balances.casual?.total ?? 12}
+                      / {balances.CASUAL?.allowance ?? balances.casual?.total ?? 12}
                     </span>
                   </span>
                 </div>
                 <div className="flex items-center justify-between p-2.5 bg-amber-50/60 rounded-lg border border-amber-100">
                   <span className="text-xs font-medium text-amber-900">Sick Leave</span>
                   <span className="text-sm font-bold text-amber-700">
-                    {balances.sick?.remaining ?? 0}{' '}
+                    {balances.SICK?.available ?? balances.sick?.remaining ?? 0}{' '}
                     <span className="text-xs font-normal text-amber-500">
-                      / {balances.sick?.total ?? 10}
+                      / {balances.SICK?.allowance ?? balances.sick?.total ?? 10}
                     </span>
                   </span>
                 </div>
                 <div className="flex items-center justify-between p-2.5 bg-emerald-50/60 rounded-lg border border-emerald-100">
                   <span className="text-xs font-medium text-emerald-900">Earned Leave</span>
                   <span className="text-sm font-bold text-emerald-700">
-                    {balances.earned?.remaining ?? 0}{' '}
+                    {balances.EARNED?.available ?? balances.earned?.remaining ?? 0}{' '}
                     <span className="text-xs font-normal text-emerald-500">
-                      / {balances.earned?.total ?? 15}
+                      / {balances.EARNED?.allowance ?? balances.earned?.total ?? 15}
                     </span>
                   </span>
                 </div>

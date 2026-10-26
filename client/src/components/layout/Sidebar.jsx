@@ -26,7 +26,9 @@ export const Sidebar = ({ isOpen, onClose }) => {
 
   const navItems = [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-    { name: 'Employees', path: '/employees', icon: Users },
+    ...(user?.role === 'HR' || user?.role === 'MANAGER'
+      ? [{ name: 'Employees', path: '/employees', icon: Users }]
+      : []),
     { name: 'Attendance', path: '/attendance', icon: Clock },
     { name: 'Leave Management', path: '/leaves', icon: CalendarDays },
     { name: 'Announcements', path: '/announcements', icon: Megaphone },

@@ -55,7 +55,7 @@ export const LeavesPage = () => {
     try {
       const res = await leaveAPI.getBalanceMe();
       if (res.data?.success) {
-        setBalance(res.data.data);
+        setBalance(res.data.data?.balances || res.data.data);
       }
     } catch (err) {
       console.error('Failed to fetch leave balance:', err);
@@ -213,48 +213,48 @@ export const LeavesPage = () => {
             <div className="flex items-center justify-between text-xs font-semibold uppercase text-slate-500">
               <span>Casual Leave</span>
               <span className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                {balance.CASUAL?.remaining} Days Left
+                {balance.CASUAL?.available ?? balance.CASUAL?.remaining ?? 0} Days Left
               </span>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
               <span className="text-2xl font-bold text-slate-900">
-                {balance.CASUAL?.remaining}
+                {balance.CASUAL?.available ?? balance.CASUAL?.remaining ?? 0}
               </span>
-              <span className="text-xs text-slate-400">/ {balance.CASUAL?.allowance} days</span>
+              <span className="text-xs text-slate-400">/ {balance.CASUAL?.allowance ?? 12} days</span>
             </div>
-            <p className="mt-1 text-xs text-slate-500">{balance.CASUAL?.used} days used this year</p>
+            <p className="mt-1 text-xs text-slate-500">{balance.CASUAL?.used ?? 0} days used this year</p>
           </div>
 
           <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs">
             <div className="flex items-center justify-between text-xs font-semibold uppercase text-slate-500">
               <span>Sick Leave</span>
               <span className="text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
-                {balance.SICK?.remaining} Days Left
+                {balance.SICK?.available ?? balance.SICK?.remaining ?? 0} Days Left
               </span>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
               <span className="text-2xl font-bold text-slate-900">
-                {balance.SICK?.remaining}
+                {balance.SICK?.available ?? balance.SICK?.remaining ?? 0}
               </span>
-              <span className="text-xs text-slate-400">/ {balance.SICK?.allowance} days</span>
+              <span className="text-xs text-slate-400">/ {balance.SICK?.allowance ?? 10} days</span>
             </div>
-            <p className="mt-1 text-xs text-slate-500">{balance.SICK?.used} days used this year</p>
+            <p className="mt-1 text-xs text-slate-500">{balance.SICK?.used ?? 0} days used this year</p>
           </div>
 
           <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs">
             <div className="flex items-center justify-between text-xs font-semibold uppercase text-slate-500">
               <span>Earned Leave</span>
               <span className="text-purple-700 bg-purple-50 px-2 py-0.5 rounded-full border border-purple-200">
-                {balance.EARNED?.remaining} Days Left
+                {balance.EARNED?.available ?? balance.EARNED?.remaining ?? 0} Days Left
               </span>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
               <span className="text-2xl font-bold text-slate-900">
-                {balance.EARNED?.remaining}
+                {balance.EARNED?.available ?? balance.EARNED?.remaining ?? 0}
               </span>
-              <span className="text-xs text-slate-400">/ {balance.EARNED?.allowance} days</span>
+              <span className="text-xs text-slate-400">/ {balance.EARNED?.allowance ?? 15} days</span>
             </div>
-            <p className="mt-1 text-xs text-slate-500">{balance.EARNED?.used} days used this year</p>
+            <p className="mt-1 text-xs text-slate-500">{balance.EARNED?.used ?? 0} days used this year</p>
           </div>
         </div>
       )}
